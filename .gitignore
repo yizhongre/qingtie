@@ -1,0 +1,38 @@
+# Build output and local tooling
+/.build/
+/.build-logs/
+/.swiftpm/
+/dist/
+.DS_Store
+.idea/
+.vscode/
+xcuserdata/
+*.xcuserstate
+*.log
+__pycache__/
+*.py[cod]
+
+# Local configuration and signing material
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+*.p12
+*.pfx
+*.cer
+*.mobileprovision
+*.provisionprofile
+
+# Private files and application data
+/.local/
+/private/
+/internal/
+/backups/
+/Backups/
+/History*.json
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
