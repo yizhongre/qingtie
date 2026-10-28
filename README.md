@@ -2,6 +2,10 @@
 
 QingTie 是一款本地运行的 macOS 菜单栏剪贴板工具，支持历史记录、搜索、固定和内容预览。
 
+**[下载 macOS 通用版 DMG](https://github.com/yizhongre/qingtie/releases/latest/download/QingTie-universal.dmg)**
+
+适用于 macOS 14 及更新版本，支持 Apple M 系列和 Intel Mac。[所有版本](https://github.com/yizhongre/qingtie/releases) · [SHA-256 校验值](https://github.com/yizhongre/qingtie/releases/latest/download/SHA256SUMS.txt)
+
 ## 功能
 
 - 保存文本、富文本、图片和文件引用，保留原始剪贴板格式。
@@ -13,7 +17,11 @@ QingTie 是一款本地运行的 macOS 菜单栏剪贴板工具，支持历史�
 
 ## 安装与使用
 
-需要 macOS 14 或更新版本。将构建得到的 `QingTie.app` 放入「应用程序」文件夹后打开，点击菜单栏图标或按 `⇧⌘V` 查看历史记录。
+1. 下载并打开 `QingTie-universal.dmg`。
+2. 将 `QingTie.app` 拖入「应用程序」文件夹。
+3. 从「应用程序」打开 QingTie，点击菜单栏图标或按 `⇧⌘V` 查看历史记录。
+
+当前下载包未使用 Apple Developer ID 证书签名，也未经过 Apple 公证。首次尝试打开后，如果 macOS 阻止运行，请先确认下载来自本仓库的[发布页面](https://github.com/yizhongre/qingtie/releases)，且来源可信，再按照 [Apple 官方指引](https://support.apple.com/zh-cn/102445)，在「系统设置 → 隐私与安全性」中选择「仍要打开」，并在提示中确认打开。
 
 打开面板后可直接输入搜索，使用方向键选择记录，按回车或点击记录复制内容。自动粘贴需要在系统设置中授予辅助功能权限；未授权时，复制后回到目标应用按 `⌘V` 即可。
 
@@ -43,7 +51,7 @@ QingTie 是一款本地运行的 macOS 菜单栏剪贴板工具，支持历史�
 
 需要 Swift 5.10 或更新版本、macOS SDK、Python 3 和 Xcode Command Line Tools。项目只使用 Apple 系统框架，无外部软件包依赖。
 
-获取源码并构建：
+获取源码并构建当前 Mac 架构的应用。
 
 ```sh
 git clone https://github.com/yizhongre/qingtie.git
@@ -53,6 +61,12 @@ cd qingtie
 
 产物位于 `dist/QingTie.app`。构建脚本会生成应用图标并使用本地 ad-hoc 签名；此签名不包含 Apple 公证。
 
+如需构建同时支持 Apple M 系列和 Intel Mac 的通用应用，并生成 DMG 与 SHA-256 校验值，运行以下命令。
+
+```sh
+./scripts/build-release.sh
+```
+
 ## 运行检查
 
 ```sh
@@ -60,10 +74,14 @@ cd qingtie
 ./scripts/test-panel.sh
 ./scripts/test-watcher.sh
 ./scripts/test-source-icons.sh
+python3 Tests/PackagingChecks.py
 python3 scripts/check-package.py
+python3 scripts/check-release.py
 ```
 
-最后一项检查需先完成应用构建，用于验证软件包依赖、应用元数据、资源和系统库链接。测试使用私有剪贴板、合成数据和临时文件，不读取或改写系统剪贴板及实际历史记录。图标检查读取系统已安装应用的元数据。
+`check-package.py` 需先完成应用构建，用于验证软件包依赖、应用元数据、资源和系统库链接。`check-release.py` 需先运行 `./scripts/build-release.sh`，用于检查发布产物。
+
+测试使用私有剪贴板、合成数据和临时文件，不读取或改写系统剪贴板及实际历史记录。图标检查读取系统已安装应用的元数据。
 
 可运行 `open -n dist/QingTie.app --args --demo` 查看使用临时数据和私有剪贴板的演示界面，运行 `open -n dist/QingTie.app --args --show-about` 查看关于窗口。
 
